@@ -113,6 +113,15 @@ class MainActivity : Activity() {
         page.addView(soundGroup)
         page.addView(note("Les notifications restent soumises aux autorisations Android et aux réglages Ne pas déranger."))
 
+        page.addView(CheckBox(this).apply {
+            text = "Activer les alertes en cas d'incident ou d'arrêt anormal"
+            isChecked = prefs.getBoolean("incident_alerts", true)
+            setOnCheckedChangeListener { _, checked ->
+                prefs.edit().putBoolean("incident_alerts", checked).apply()
+            }
+        })
+        page.addView(note("Alerte unique en cas d'échec, d'annulation, de délai dépassé ou d'indisponibilité de GitHub. Un traitement toujours actif après 60 minutes est signalé ; la surveillance continue ensuite."))
+
         page.addView(heading("ACCÈS À TES DÉPÔTS GITHUB"))
         page.addView(note("Sans jeton, seuls les dépôts publics sont visibles. Pour afficher aussi les dépôts privés, ajoute un jeton personnel en lecture seule. Il sera chiffré sur ce téléphone et ne sera jamais envoyé ailleurs que directement à l'API GitHub."))
         tokenInput = EditText(this).apply {
