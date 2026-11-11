@@ -1,4 +1,5 @@
 package fr.sibellacreation.githubmonitor
+
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -8,7 +9,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.Gravity
+import android.view.View
 import android.widget.RemoteViews
 
 class MonitorWidget:AppWidgetProvider(){
@@ -22,22 +23,33 @@ class MonitorWidget:AppWidgetProvider(){
    val p=context.getSharedPreferences(MonitorService.PREFS,Context.MODE_PRIVATE)
    val options=m.getAppWidgetOptions(id)
    val width=options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH,280)
-   val height=options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT,180)
-   val compact=width<270||height<190
-   val expanded=width>=330&&height>=230
+   val height=options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT,240)
+   val compact=width<270||height<230
+   val expanded=width>=330&&height>=300
    val v=RemoteViews(context.packageName,R.layout.widget)
    v.setTextViewTextSize(R.id.widget_title,TypedValue.COMPLEX_UNIT_SP,if(compact)14f else if(expanded)19f else 16f)
    v.setTextViewTextSize(R.id.updated,TypedValue.COMPLEX_UNIT_SP,if(compact)9f else 10f)
    v.setTextViewTextSize(R.id.monitor_state,TypedValue.COMPLEX_UNIT_SP,if(compact)9f else if(expanded)12f else 10f)
-   v.setTextViewTextSize(R.id.bakeries,TypedValue.COMPLEX_UNIT_SP,if(compact)10f else if(expanded)14f else 12f)
-   v.setTextViewTextSize(R.id.stations,TypedValue.COMPLEX_UNIT_SP,if(compact)10f else if(expanded)14f else 12f)
-   v.setTextViewTextSize(R.id.iriscope,TypedValue.COMPLEX_UNIT_SP,if(compact)10f else if(expanded)14f else 12f)
    v.setTextViewTextSize(R.id.refresh,TypedValue.COMPLEX_UNIT_SP,if(compact)10f else 12f)
    val pad=if(compact)6 else if(expanded)16 else 10
    v.setViewPadding(R.id.widget_root,pad,pad,pad,pad)
-   setRepo(context,v,p,"bakeries","Boulangeries-France",R.id.bakeries,R.id.bakeries_progress,R.id.bakeries_card,101,"BOULANGERIES-FRANCE")
-   setRepo(context,v,p,"stations","Stations-Total-France",R.id.stations,R.id.stations_progress,R.id.stations_card,102,"STATIONS-TOTAL-FRANCE")
-   setRepo(context,v,p,"iriscope","Iriscope",R.id.iriscope,R.id.iriscope_progress,R.id.iriscope_card,103,"iriscope")
+   val defaults=listOf("BOULANGERIES-FRANCE","STATIONS-TOTAL-FRANCE","iriscope")
+   val selected=(p.getStringSet("selected_repos",null)?.toList()?:defaults).sorted()
+   val slots=listOf(
+    intArrayOf(R.id.repo1_card,R.id.repo1_text,R.id.repo1_progress),
+    intArrayOf(R.id.repo2_card,R.id.repo2_text,R.id.repo2_progress),
+    intArrayOf(R.id.repo3_card,R.id.repo3_text,R.id.repo3_progress),
+    intArrayOf(R.id.repo4_card,R.id.repo4_text,R.id.repo4_progress),
+    intArrayOf(R.id.repo5_card,R.id.repo5_text,R.id.repo5_progress)
+   )
+   slots.forEachIndexed{index,slot->
+    if(index<selected.size){
+     v.setViewVisibility(slot[0],View.VISIBLE)
+     val repo=selected[index]
+     val key=repoKey(repo)
+     setRepo(context,v,p,key,repo,slot[1],slot[2],slot[0],101+index)
+    }else v.setViewVisibility(slot[0],View.GONE)
+   }
    v.setTextViewText(R.id.updated,p.getString("updated","En attente d'actualisation"))
    v.setTextViewText(R.id.monitor_state,p.getString("monitor","Surveillance inactive"))
    val refresh=Intent(context,MonitorWidget::class.java).setAction(ACTION_REFRESH)
@@ -45,7 +57,8 @@ class MonitorWidget:AppWidgetProvider(){
    v.setOnClickPendingIntent(R.id.refresh,pi)
    m.updateAppWidget(id,v)
   }
-  private fun setRepo(context:Context,v:RemoteViews,p:android.content.SharedPreferences,key:String,label:String,textId:Int,barId:Int,cardId:Int,code:Int,repo:String){
+  private fun setRepo(context:Context,v:RemoteViews,p:android.content.SharedPreferences,key:String,repo:String,textId:Int,barId:Int,cardId:Int,code:Int){
+   val label=p.getString("label_$key",repo)?:repo
    val status=p.getString(key,"—")?:"—"
    val progress=p.getInt("progress_$key",if(status.startsWith("TERMINÉ"))100 else 0).coerceIn(0,100)
    v.setTextViewText(textId,"$label  •  $status  •  $progress%")
@@ -55,5 +68,6 @@ class MonitorWidget:AppWidgetProvider(){
    val click=PendingIntent.getActivity(context,code,open,PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
    v.setOnClickPendingIntent(cardId,click)
   }
+  private fun repoKey(repo:String)=when(repo){"BOULANGERIES-FRANCE"->"bakeries";"STATIONS-TOTAL-FRANCE"->"stations";"iriscope"->"iriscope";else->"repo_"+repo.lowercase().replace(Regex("[^a-z0-9]+"),"_").trim('_')}
  }
 }
