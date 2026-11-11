@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:padding="14dp" android:background="#192C76">
+    android:orientation="vertical" android:padding="12dp" android:background="#192C76">
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="SUIVI GITHUB" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="17sp" />
+        android:text="SUIVI GITHUB" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="16sp" />
     <TextView android:id="@+id/updated" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="En attente d'actualisation" android:textColor="#93DAFE" android:textSize="10sp" android:paddingBottom="6dp" />
-    <TextView android:id="@+id/bakeries" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Boulangeries-France : —" android:textColor="#FFFFFF" android:textSize="13sp" android:padding="3dp" />
-    <TextView android:id="@+id/stations" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Stations-Total-France : —" android:textColor="#FFFFFF" android:textSize="13sp" android:padding="3dp" />
-    <TextView android:id="@+id/iriscope" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Iriscope : —" android:textColor="#FFFFFF" android:textSize="13sp" android:padding="3dp" />
+        android:text="En attente d'actualisation" android:textColor="#93DAFE" android:textSize="10sp" android:paddingBottom="3dp" />
+
+    <LinearLayout android:id="@+id/bakeries_card" android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:orientation="vertical" android:gravity="center_vertical" android:paddingTop="2dp" android:paddingBottom="2dp">
+        <TextView android:id="@+id/bakeries" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="Boulangeries-France : —" android:textColor="#FFFFFF" android:textSize="11sp" android:maxLines="1" />
+        <ProgressBar android:id="@+id/bakeries_progress" style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent" android:layout_height="8dp" android:max="100" android:progress="0"
+            android:progressTint="#FF7403" android:progressBackgroundTint="#52649B" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/stations_card" android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:orientation="vertical" android:gravity="center_vertical" android:paddingTop="2dp" android:paddingBottom="2dp">
+        <TextView android:id="@+id/stations" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="Stations-Total-France : —" android:textColor="#FFFFFF" android:textSize="11sp" android:maxLines="1" />
+        <ProgressBar android:id="@+id/stations_progress" style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent" android:layout_height="8dp" android:max="100" android:progress="0"
+            android:progressTint="#FF7403" android:progressBackgroundTint="#52649B" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/iriscope_card" android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:orientation="vertical" android:gravity="center_vertical" android:paddingTop="2dp" android:paddingBottom="2dp">
+        <TextView android:id="@+id/iriscope" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="Iriscope : —" android:textColor="#FFFFFF" android:textSize="11sp" android:maxLines="1" />
+        <ProgressBar android:id="@+id/iriscope_progress" style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent" android:layout_height="8dp" android:max="100" android:progress="0"
+            android:progressTint="#FF7403" android:progressBackgroundTint="#52649B" />
+    </LinearLayout>
+
     <TextView android:id="@+id/monitor_state" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Surveillance inactive" android:textColor="#93DAFE" android:textSize="11sp" android:paddingTop="4dp" />
-    <Button android:id="@+id/refresh" android:layout_width="match_parent" android:layout_height="42dp"
-        android:text="ACTUALISER" android:textAllCaps="true" android:textColor="#FFFFFF" android:backgroundTint="#FF7403" />
+        android:text="Surveillance inactive" android:textColor="#93DAFE" android:textSize="10sp" android:paddingTop="3dp" android:paddingBottom="4dp" />
+    <Button android:id="@+id/refresh" android:layout_width="match_parent" android:layout_height="38dp"
+        android:text="ACTUALISER" android:textAllCaps="true" android:textSize="12sp" android:textColor="#FFFFFF" android:backgroundTint="#FF7403" />
 </LinearLayout>
