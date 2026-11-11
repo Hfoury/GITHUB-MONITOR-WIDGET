@@ -125,7 +125,7 @@ class MainActivity : Activity() {
             text = "Créer un jeton GitHub"
             setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/settings/personal-access-tokens/new"))) }
         })
-        page.addView(note("Pour un jeton à granularité fine : propriétaire Hfoury, accès à tous les dépôts, autorisation Contents/Metadata en lecture seule et Actions en lecture seule."))
+        page.addView(note("Pour un jeton à granularité fine : propriétaire Hfoury, accès à tous les dépôts, autorisation Metadata en lecture seule et Actions en lecture seule."))
         page.addView(Button(this).apply {
             text = "Enregistrer le jeton et actualiser la liste"
             setOnClickListener {
