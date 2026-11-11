@@ -202,7 +202,7 @@ class MainActivity : Activity() {
                 val repos = withContext(Dispatchers.IO) { fetchRepositories(token) }
                 renderRepositories(repos, token != null)
             } catch (e: Exception) {
-                repoStatus.text = "Impossible de récupérer la liste : \${e.message ?: "erreur réseau"}"
+                repoStatus.text = "Impossible de récupérer la liste : ${e.message ?: "erreur réseau"}"
             } finally {
                 reloadButton.isEnabled = true
             }
